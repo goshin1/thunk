@@ -1,23 +1,40 @@
-import logo from './logo.svg';
 import './App.css';
+import React from 'react';
+import {createStore} from 'redux';
+import {Provider, useSelector, useDispatch} from 'react-redux';
+import store from './store';
+import {up} from './counterSlice';
+import { asyncUpFetch } from './counterSlice';
+
+function Counter(){
+  const dispatch = useDispatch();
+  const count = useSelector(state=>{
+    return state.counter.value;
+  });
+  const status = useSelector(state=>{
+    return state.counter.status;
+  });
+
+  return <div>
+    <button onClick={()=>{
+      dispatch(up(2));
+    }}>+</button>
+
+    {<button onClick={()=>{
+      dispatch(asyncUpFetch());
+    }}>+ async fetch</button>}
+
+
+    <div>{count} | {status}</div>
+  </div>
+}
 
 function App() {
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <Provider store={store}>
+        <Counter></Counter>
+      </Provider>
     </div>
   );
 }
